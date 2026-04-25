@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kitabevi Online Satış</title>
+    <style>
+        .kitap-karti {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            width: 200px;
+            vertical-align: top;
+        }
+        .sepet-alani {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-top: 2px solid #333;
+            margin-top: 30px;
+        }
+        button {
+            cursor: pointer;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📚 Kitap Mağazası</h1>
+
+    {% if session.get('user') %}
+        <p>Hoş geldin, <b>{{ session['user'] }}</b> | <a href="/logout">Çıkış Yap</a></p>
+        {% if session.get('role') == 'admin' %}
+            <a href="/admin"><button style="background-color: orange;">Admin Paneline Git</button></a>
+        {% endif %}
+    {% else %}
+        <a href="/login">Giriş Yap</a>
+    {% endif %}
+
+    <hr>
+
+    <div class="kitap-listesi">
+        {% for book in books %}
+            <div class="kitap-karti">
+                <h3>{{ book.name }}</h3>
+                <p><b>Yazar:</b> {{ book.author }}</p>
+                <p><b>Fiyat:</b> {{ book.price }} TL</p>
+                <a href="/add_to_cart/{{ book.id }}">
+                    <button>Sepete Ekle</button>
+                </a>
+            </div>
+        {% else %}
+            <p>Henüz kitap eklenmemiş.</p>
+        {% endfor %}
+    </div>
+
+    {% if session.get('cart') %}
+        <div class="sepet-alani">
+            <h2>🛒 Sepetiniz</h2>
+            <p>Sepetinizde <b>{{ session['cart']|length }}</b> adet kitap bulunuyor.</p>
+            <a href="/checkout">
+                <button style="background-color: green; color: white; padding: 10px 20px; font-size: 16px;">
+                    Satın Almayı Tamamla
+                </button>
+            </a>
+        </div>
+    {% endif %}
+
+</body>
+</html>

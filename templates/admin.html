@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Yönetici Paneli</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; line-height: 1.6; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .nav-buttons { margin-bottom: 20px; }
+        .reset-section { 
+            background-color: #fff5f5; 
+            border: 2px solid #feb2b2; 
+            padding: 20px; 
+            margin-top: 40px; 
+            border-radius: 8px; 
+        }
+        .btn-red { 
+            background-color: #e53e3e; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-weight: bold;
+        }
+        .btn-red:hover { background-color: #c53030; }
+    </style>
+</head>
+<body>
+
+    <h1>Yönetici Paneli</h1>
+    <div class="nav-buttons">
+        <p>Hoş geldin, <b>{{ session['user'] }}</b></p>
+        <a href="/"><button>Ana Sayfaya Git</button></a>
+        <a href="/add_book"><button>Yeni Kitap Ekle</button></a>
+        <a href="/logout"><button>Güvenli Çıkış</button></a>
+    </div>
+
+    <hr>
+
+    <h2>📊 Satış Raporu ve Envanter</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Kitap Adı</th>
+                <th>Yazar</th>
+                <th>Birim Fiyat</th>
+                <th>Satılan Adet</th>
+                <th>Toplam Gelir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.name }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.price }} TL</td>
+                <td>{{ book.sold_count }}</td>
+                <td>{{ book.sold_count * book.price }} TL</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5">Henüz kayıtlı kitap bulunmuyor.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="reset-section">
+        <h3>🚨 Sistem Bakımı ve Sıfırlama</h3>
+        <p>Bu buton, sistemi "Pazarlama Demosu" moduna geri döndürür. Tüm eklenen kullanıcılar ve satış verileri silinerek temiz veriler yüklenir.</p>
+        
+        <a href="/reset_system" onclick="return confirm('Sistemi sıfırlamak istediğinize emin misiniz? Tüm satış verileri kaybolacak!')">
+            <button class="btn-red">FABRİKA AYARLARINA DÖN (RESET)</button>
+        </a>
+    </div>
+
+</body>
+</html>
