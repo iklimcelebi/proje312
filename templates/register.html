@@ -1,9 +1,29 @@
-<h1>Kayıt Ol</h1>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kayıt Ol</title>
 
-<form method="POST">
-    <input name="username" placeholder="Kullanıcı adı">
-    <input name="password" placeholder="Şifre">
-    <button type="submit">Kayıt Ol</button>
-</form>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
 
-<a href="/login">Giriş yap</a>
+<div class="login-container">
+
+    <h2>📝 Kayıt Ol</h2>
+
+    <form method="POST">
+        <input type="text" name="username" placeholder="Kullanıcı adı" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit">Kayıt Ol</button>
+    </form>
+
+    <p>
+        Zaten hesabın var mı?
+        <a href="/login">Giriş Yap</a>
+    </p>
+
+</div>
+
+</body>
+</html>

@@ -1,7 +1,29 @@
-<form method="POST">
-    <input type="text" name="username" placeholder="Kullanıcı adı">
-    <input type="password" name="password" placeholder="Şifre">
-    <button type="submit">Giriş Yap</button>
-</form>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş Yap</title>
 
-<a href="/register">Kayıt Ol</a>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="login-container">
+
+    <h2>🔐 Giriş Yap</h2>
+
+    <form method="POST">
+        <input type="text" name="username" placeholder="Kullanıcı adı" required>
+        <input type="password" name="password" placeholder="Şifre" required>
+        <button type="submit">Giriş Yap</button>
+    </form>
+
+    <p>
+        Hesabın yok mu?
+        <a href="/register">Kayıt Ol</a>
+    </p>
+
+</div>
+
+</body>
+</html>

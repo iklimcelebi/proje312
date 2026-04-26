@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sepetim</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="cart-container">
+    <h1>🛒 Sepetim</h1>
+
+    {% if items %}
+        <div class="cart-list">
+            {% for b in items %}
+                <div class="cart-item" style="display: flex; align-items: center; background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    
+                    {% if b.image %}
+                        <img src="{{ '/' + b.image if not b.image.startswith('http') else b.image }}" alt="{{ b.name }}" style="width: 80px; height: 110px; object-fit: cover; margin-right: 20px; border-radius: 5px;">
+                    {% else %}
+                        <div style="width: 80px; height: 110px; background: #ddd; margin-right: 20px; display: flex; align-items: center; justify-content: center; border-radius: 5px;">📖</div>
+                    {% endif %}
+
+                    <div class="cart-info" style="flex: 1;">
+                        <h3 style="margin: 0 0 5px 0;">{{ b.name }}</h3>
+                        <p style="margin: 2px 0; color: #666;">Yazar: {{ b.author }}</p>
+                        <p style="margin: 2px 0;">Birim Fiyat: {{ b.price }} TL</p>
+                        <p style="margin: 2px 0; font-weight: bold; color: #2980b9;">Adet: {{ b.quantity }}</p> 
+                    </div>
+
+                    <div class="cart-price" style="text-align: right; min-width: 120px;">
+                        <p style="font-size: 0.8em; color: #777; margin-bottom: 2px;">Ara Toplam</p>
+                        <div style="font-size: 1.2em; font-weight: bold; color: #2c3e50; margin-bottom: 10px;">{{ b.item_total }} TL</div>
+                        
+                        <a href="/remove_from_cart/{{ b.id }}" 
+                           onclick="return confirm('Bu kitabı sepetten çıkarmak istiyor musunuz?')"
+                           style="color: #e74c3c; text-decoration: none; font-size: 0.85em; border: 1px solid #e74c3c; padding: 3px 8px; border-radius: 5px; transition: 0.3s;">
+                            🗑 Sepetten Çıkar
+                        </a>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; text-align: right;">
+            <h2 style="margin-bottom: 20px;">Genel Toplam: <span style="color: #27ae60;">{{ total }} TL</span></h2>
+            
+            <a href="/checkout">
+                <button class="buy-btn" style="background-color: #27ae60; color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 18px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);">
+                    Ödemeyi Tamamla ve Satın Al
+                </button>
+            </a>
+        </div>
+
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <p style="font-size: 20px; color: #777;">Sepetiniz şu an boş 😢</p>
+            <br>
+            <a href="/" style="background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Alışverişe Başla</a>
+        </div>
+    {% endif %}
+
+    <br><br>
+    <a href="/" style="text-decoration: none; color: #3498db; font-weight: bold;">⬅ Kitap Listesine Dön</a>
+</div>
+
+</body>
+</html>

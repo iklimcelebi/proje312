@@ -3,84 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <title>Yönetici Paneli</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        body { font-family: sans-serif; margin: 40px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; }
-        th { background-color: #f4f4f4; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-
-        button {
-            padding: 6px 12px;
-            cursor: pointer;
-        }
-
-        .delete-btn {
-            background-color: red;
-            color: white;
-            border: none;
-        }
-
-        .reset-btn {
-            background-color: darkred;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            margin-top: 20px;
+        /* Admin sayfasına özel tablo düzenlemesi */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        
+        /* Sağ üstteki sabit buton grubunu burada da kullanıyoruz */
+        .top-right-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
 
-<h1>Yönetici Paneli</h1>
+<div class="top-right-nav">
+    <a href="/add_book"><button style="background-color: #2ecc71;">➕ Yeni Kitap Ekle</button></a>
+    <a href="/"><button style="background-color: #3498db;">🏠 Ana Sayfa</button></a>
+    <a href="/logout"><button style="background-color: #95a5a6;">🚪 Çıkış Yap</button></a>
+    
+    <a href="/reset_system" onclick="return confirm('DİKKAT: Tüm veriler silinecek! Emin misiniz?')">
+        <button class="reset-fixed" style="background-color: #e74c3c;">🚨 SİSTEMİ SIFIRLA</button>
+    </a>
+</div>
 
-<p>Hoş geldin, <b>{{ session['user'] }}</b></p>
+<div style="padding: 20px; margin-right: 220px;"> <h1>📊 Yönetici Paneli</h1>
+    <p>Hoş geldin, <b>{{ session['user'] }}</b>. Sistemdeki tüm satışları ve kitapları buradan yönetebilirsin.</p>
 
-<a href="/"><button>Ana Sayfa</button></a>
-<a href="/add_book"><button>Yeni Kitap Ekle</button></a>
-<a href="/logout"><button>Çıkış Yap</button></a>
+    <hr>
 
-<hr>
-
-<h2>📊 Satış Raporu</h2>
-
-<table>
-    <tr>
-        <th>Kitap</th>
-        <th>Yazar</th>
-        <th>Fiyat</th>
-        <th>Satılan</th>
-        <th>Gelir</th>
-        <th>İşlem</th>
-    </tr>
-
-    {% for book in books %}
-    <tr>
-        <td>{{ book.name }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.price }} TL</td>
-        <td>{{ book.sold_count }}</td>
-        <td>{{ book.sold_count * book.price }} TL</td>
-        <td>
-            <a href="/delete_book/{{ book.id }}">
-                <button class="delete-btn">Sil</button>
-            </a>
-        </td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="6">Hiç kitap yok</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<hr>
-
-<h3>⚠️ Sistem Sıfırlama</h3>
-
-<a href="/reset_system" onclick="return confirm('Tüm veriler silinecek! Emin misin?')">
-    <button class="reset-btn">SİSTEMİ SIFIRLA</button>
-</a>
+    <h2>Satış Raporu</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Kitap Adı</th>
+                <th>Yazar</th>
+                <th>Birim Fiyat</th>
+                <th>Satılan Adet</th>
+                <th>Toplam Gelir</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.name }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.price }} TL</td>
+                <td>{{ book.sold_count }}</td>
+                <td>{{ book.sold_count * book.price }} TL</td>
+                <td>
+                    <a href="/delete_book/{{ book.id }}" onclick="return confirm('Bu kitabı silmek istediğine emin misin?')">
+                        <button style="background-color: #c0392b; padding: 5px 10px; font-size: 12px;">Sil</button>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Henüz hiç kitap yok.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

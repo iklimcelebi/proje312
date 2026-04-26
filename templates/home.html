@@ -3,69 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>Kitabevi Online Satış</title>
-    <style>
-        .kitap-karti {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 8px;
-            display: inline-block;
-            width: 200px;
-            vertical-align: top;
-        }
-        .sepet-alani {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-top: 2px solid #333;
-            margin-top: 30px;
-        }
-        button {
-            cursor: pointer;
-            padding: 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-    <h1>📚 Kitap Mağazası</h1>
+{% if session.get('cart') %}
+    <div class="top-right-nav">
+        <a href="/cart">
+            {# values()|sum diyerek adetlerin toplamını gösteriyoruz #}
+            <button class="cart-fixed">🛒 Sepetim ({{ session['cart'].values()|sum }})</button>
+        </a>
+        <a href="/checkout">
+            <button style="background-color: #2ecc71; color: white;">⚡ Ödeme Yap</button>
+        </a>
+    </div>
+{% endif %}
 
+<h1>📚 Kitap Mağazası</h1>
+
+<div style="text-align: center; margin-bottom: 10px;">
     {% if session.get('user') %}
         <p>Hoş geldin, <b>{{ session['user'] }}</b> | <a href="/logout">Çıkış Yap</a></p>
         {% if session.get('role') == 'admin' %}
-            <a href="/admin"><button style="background-color: orange;">Admin Paneline Git</button></a>
+            <a href="/admin"><button style="background-color: #f39c12; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Yönetici Paneli</button></a>
         {% endif %}
     {% else %}
-        <a href="/login">Giriş Yap</a>
+        <a href="/login">Giriş Yap</a> veya <a href="/register">Kayıt Ol</a>
     {% endif %}
+</div>
 
-    <hr>
+<div class="search-section" style="max-width: 600px; margin: 20px auto; text-align: center;">
+    <form action="/" method="GET" style="display: flex; gap: 10px; justify-content: center;">
+        <input type="text" name="search" placeholder="Kitap adı veya yazar ara..." 
+               value="{{ request.args.get('search', '') }}"
+               style="flex: 1; padding: 12px 20px; border: 2px solid #3498db; border-radius: 25px; outline: none; font-size: 16px;">
+        
+        <button type="submit" style="background-color: #3498db; color: white; border-radius: 25px; padding: 10px 25px; border: none; cursor: pointer;">
+            🔍 Ara
+        </button>
 
-    <div class="kitap-listesi">
-        {% for book in books %}
-            <div class="kitap-karti">
-                <h3>{{ book.name }}</h3>
-                <p><b>Yazar:</b> {{ book.author }}</p>
-                <p><b>Fiyat:</b> {{ book.price }} TL</p>
-                <a href="/add_to_cart/{{ book.id }}">
-                    <button>Sepete Ekle</button>
-                </a>
-            </div>
-        {% else %}
-            <p>Henüz kitap eklenmemiş.</p>
-        {% endfor %}
-    </div>
-
-    {% if session.get('cart') %}
-        <div class="sepet-alani">
-            <h2>🛒 Sepetiniz</h2>
-            <p>Sepetinizde <b>{{ session['cart']|length }}</b> adet kitap bulunuyor.</p>
-            <a href="/checkout">
-                <button style="background-color: green; color: white; padding: 10px 20px; font-size: 16px;">
-                    Satın Almayı Tamamla
+        {% if request.args.get('search') %}
+            <a href="/">
+                <button type="button" style="background-color: #e74c3c; color: white; border-radius: 25px; padding: 10px 20px; border: none; cursor: pointer;">
+                    ✖ Temizle
                 </button>
             </a>
-        </div>
+        {% endif %}
+    </form>
+    
+    {% if request.args.get('search') %}
+        <p style="margin-top: 10px; color: #666;">
+            "<b>{{ request.args.get('search') }}</b>" için sonuçlar:
+        </p>
     {% endif %}
+</div>
+
+<hr>
+
+<div class="kitap-listesi">
+    {% for book in books %}
+        <div class="kitap-karti">
+            {% if book.image %}
+                <img src="{{ '/' + book.image if not book.image.startswith('http') else book.image }}" width="100%" style="height: 250px; object-fit: cover;">
+            {% else %}
+                <div style="height: 250px; background: #eee; display: flex; align-items: center; justify-content: center;">📖</div>
+            {% endif %}
+            
+            <h3>{{ book.name }}</h3>
+            <p><b>Yazar:</b> {{ book.author }}</p>
+            <p><b>Fiyat:</b> {{ book.price }} TL</p>
+
+            <a href="/add_to_cart/{{ book.id }}">
+                <button style="width: 100%; padding: 10px; cursor: pointer;">Sepete Ekle</button>
+            </a>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 50px; width: 100%;">
+            <p>Aradığınız kriterde kitap bulunamadı veya sistem sıfırlanmış.</p>
+            <a href="/"><button>Tüm Kitapları Göster</button></a>
+        </div>
+    {% endfor %}
+</div>
 
 </body>
 </html>
