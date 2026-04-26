@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, session
 from models import db, User, Book
-
+import os
 app = Flask(__name__)
-app.secret_key = "secret123"
+app.secret_key = os.environ.get("SECRET_KEY", "devkey")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db.init_app(app)
@@ -11,7 +11,7 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
     if not User.query.filter_by(username="admin").first():
-        admin = User(username="admin", password="1234", role="admin")
+        admin = User(username="admin", password="1234admin", role="admin")
         db.session.add(admin)
         db.session.commit()
 
@@ -52,7 +52,7 @@ def login():
 
     return render_template("login.html")
 
-# REGISTER 🔥
+# REGISTER 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -198,7 +198,7 @@ def checkout():
     session.pop("cart", None) # Sepeti temizle
     return redirect("/")
 
-# RESET 🔥
+# RESET 
 @app.route("/reset_system")
 def reset_system():
     if "role" not in session or session["role"] != "admin":
@@ -207,7 +207,7 @@ def reset_system():
     db.drop_all()
     db.create_all()
 
-    admin = User(username="admin", password="1234iklim+", role="admin")
+    admin = User(username="admin", password="1234admin+", role="admin")
     db.session.add(admin)
 
     demo_books = [
