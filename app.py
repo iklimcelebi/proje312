@@ -118,6 +118,19 @@ def delete_book(book_id):
 
     return redirect("/admin")
 
+
+@app.route("/sales_chart")
+def sales_chart():
+    if "role" not in session or session["role"] != "admin":
+        return "Yetkisiz!"
+
+    books = Book.query.all()
+
+    names = [b.name for b in books]
+    sales = [b.sold_count for b in books]
+
+    return render_template("sales_chart.html", names=names, sales=sales)
+
 # CART
 
 @app.route("/add_to_cart/<int:book_id>")

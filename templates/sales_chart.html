@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Satış Grafiği</title>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>📊 Kitap Satış Grafiği</h1>
+
+<canvas id="myChart" width="400" height="200"></canvas>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ names | tojson }},
+            datasets: [{
+                label: 'Satılan Adet',
+                data: {{ sales | tojson }},
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+
+<br>
+<a href="/admin">⬅ Admin Paneline Dön</a>
+
+</body>
+</html>
