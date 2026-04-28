@@ -5,13 +5,11 @@
     <title>Yönetici Paneli</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        /* Admin sayfasına özel tablo düzenlemesi */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; border-radius: 10px; overflow: hidden; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background-color: #3498db; color: white; }
         tr:hover { background-color: #f1f1f1; }
         
-        /* Sağ üstteki sabit buton grubunu burada da kullanıyoruz */
         .top-right-nav {
             position: fixed;
             top: 20px;
@@ -31,9 +29,7 @@
     <a href="/logout"><button style="background-color: #95a5a6;">🚪 Çıkış Yap</button></a>
     
     <a href="/sales_chart">
-        <button style="background-color: purple; color: white;">
-            📊 Satış Grafiği
-        </button>
+        <button style="background-color: purple; color: white;">📊 Satış Grafiği</button>
     </a>
 
     <a href="/reset_system" onclick="return confirm('DİKKAT: Tüm veriler silinecek! Emin misiniz?')">
@@ -41,9 +37,9 @@
     </a>
 </div>
 
-<div style="padding: 20px; margin-right: 220px;"> <h1>📊 Yönetici Paneli</h1>
-    <p>Hoş geldin, <b>{{ session['user'] }}</b>. Sistemdeki tüm satışları ve kitapları buradan yönetebilirsin.</p>
-
+<div style="padding: 20px; margin-right: 220px;"> 
+    <h1>📊 Yönetici Paneli</h1>
+    
     <hr>
 
     <h2>Satış Raporu</h2>
@@ -64,17 +60,17 @@
                 <td>{{ book.name }}</td>
                 <td>{{ book.author }}</td>
                 <td>{{ book.price }} TL</td>
-                <td>{{ book.sold_count }}</td>
+                <td style="font-weight: bold; color: #27ae60;">{{ book.sold_count }}</td>
                 <td>{{ book.sold_count * book.price }} TL</td>
                 <td>
                     <a href="/delete_book/{{ book.id }}" onclick="return confirm('Bu kitabı silmek istediğine emin misin?')">
-                        <button style="background-color: #c0392b; padding: 5px 10px; font-size: 12px;">Sil</button>
+                        <button style="background-color: #c0392b; padding: 5px 10px; font-size: 12px; color: white; border: none; border-radius: 4px; cursor: pointer;">Sil</button>
                     </a>
                 </td>
             </tr>
             {% else %}
             <tr>
-                <td colspan="6" style="text-align: center;">Henüz hiç kitap yok.</td>
+                <td colspan="6" style="text-align: center; padding: 20px;">Henüz satış yapılmış bir kitap bulunmuyor.</td>
             </tr>
             {% endfor %}
         </tbody>

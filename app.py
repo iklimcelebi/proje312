@@ -76,8 +76,12 @@ def admin():
     if "role" not in session or session["role"] != "admin":
         return "Yetkisiz erişim!"
 
-    books = Book.query.all()
+    #Sıfır satanları gösterme ve büyükten küçüğe sırala
+    books = Book.query.filter(Book.sold_count > 0)\
+                      .order_by(Book.sold_count.desc())\
+                      .all()
     return render_template("admin.html", books=books)
+
 
 # ADD BOOK
 @app.route("/add_book", methods=["GET", "POST"])
@@ -124,7 +128,9 @@ def sales_chart():
     if "role" not in session or session["role"] != "admin":
         return "Yetkisiz!"
 
-    books = Book.query.all()
+    books = Book.query.filter(Book.sold_count > 0)\
+                      .order_by(Book.sold_count.desc())\
+                      .all()
 
     names = [b.name for b in books]
     sales = [b.sold_count for b in books]
@@ -190,6 +196,26 @@ def remove_from_cart(book_id):
         
         if book_id_str in cart:
             del cart[book_id_str] # Kitabı sözlükten tamamen kaldır
+            session["cart"] = cart
+            session.modified = True
+            
+    return redirect("/cart")
+
+@app.route("/update_cart/<int:book_id>/<string:action>")
+def update_cart(book_id, action):
+    if "cart" in session:
+        cart = session["cart"]
+        book_id_str = str(book_id)
+        
+        if book_id_str in cart:
+            if action == "increase":
+                cart[book_id_str] += 1
+            elif action == "decrease":
+                cart[book_id_str] -= 1
+                # Eğer adet 0'a düşerse kitabı tamamen sepetten çıkar
+                if cart[book_id_str] <= 0:
+                    del cart[book_id_str]
+            
             session["cart"] = cart
             session.modified = True
             
